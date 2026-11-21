@@ -1,0 +1,34 @@
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Secrets, Credentials & Local Configs (NEVER COMMIT)
+.env
+.env.*
+*.local
+*.key
+*.pem
+credentials.json
+secrets.json
+
+# Build outputs (Package archives)
+# Note: You can distribute .mmpkg packages via GitHub Releases rather than repository git tree
+dist/*.mmpkg
+
+# Node & Tooling caches
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo

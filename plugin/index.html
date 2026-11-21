@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>AYUMI · Asistente de Salud & Movilidad</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">歩</div>
+        <div>
+          <div class="brand-title">AYUMI</div>
+          <div class="brand-subtitle" id="app-subtitle" data-i18n="app.subtitle">Asistente Manos Libres · HUD 600×350</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <!-- Language Selector -->
+        <select id="lang-select" class="lang-select" aria-label="Idioma / Language">
+          <option value="es" selected>🇪🇸 ES</option>
+          <option value="en">🇺🇸 EN</option>
+          <option value="zh">🇨🇳 中文</option>
+          <option value="fr">🇫🇷 FR</option>
+          <option value="ru">🇷🇺 RU</option>
+        </select>
+        <button id="btn-toggle-settings" class="btn-icon" title="Configuración de Salud e IA" aria-label="Ajustes">⚙️</button>
+        <div id="connection-badge" class="connection-badge">
+          <span class="connection-dot"></span>
+          <span id="connection-label" data-i18n="status.connected">Conectado</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: HEALTH DASHBOARD (Live telemetry for glasses) -->
+    <section class="section-container health-summary-section">
+      <div class="section-title-bar">
+        <span class="section-title" id="health-section-title" data-i18n="health.sectionTitle">📊 PANEL DE SALUD (VISTA EN GAFAS)</span>
+        <!-- Mobility Mode Switcher -->
+        <div class="mobility-mode-selector" id="mobility-mode-selector">
+          <button class="mode-pill active" id="btn-mode-wheelchair" data-mode="wheelchair">♿ Silla</button>
+          <button class="mode-pill" id="btn-mode-steps" data-mode="steps">🚶‍♂️ Prótesis</button>
+        </div>
+      </div>
+
+      <div class="health-grid">
+        <!-- Card 1: Score & Readiness -->
+        <div class="health-card" data-view="OVERVIEW" id="card-overview">
+          <div class="health-card-header">
+            <span class="health-icon">⚡</span>
+            <span class="health-tag" id="metric-readiness-tag">ÓPTIMO</span>
+          </div>
+          <div class="health-card-val" id="metric-score">88<span class="health-card-unit">/100</span></div>
+          <div class="health-card-label"><span id="lbl-battery" data-i18n="health.battery">Batería</span>: <span id="metric-battery">85%</span></div>
+        </div>
+
+        <!-- Card 2: Sleep -->
+        <div class="health-card" data-view="SLEEP" id="card-sleep">
+          <div class="health-card-header">
+            <span class="health-icon">🛌</span>
+            <span class="health-tag">OURA</span>
+          </div>
+          <div class="health-card-val" id="metric-sleep">7h 42m</div>
+          <div class="health-card-label"><span id="lbl-efficiency" data-i18n="health.efficiency">Efic.</span>: <span id="metric-sleep-eff">91%</span></div>
+        </div>
+
+        <!-- Card 3: Cardio -->
+        <div class="health-card" data-view="CARDIO" id="card-cardio">
+          <div class="health-card-header">
+            <span class="health-icon">❤️</span>
+            <span class="health-tag">RINGCONN</span>
+          </div>
+          <div class="health-card-val" id="metric-hr">56 <span class="health-card-unit">bpm</span></div>
+          <div class="health-card-label">HRV: <span id="metric-hrv">68 ms</span></div>
+        </div>
+
+        <!-- Card 4: Mobility (Wheelchair / Prosthesis Walking) -->
+        <div class="health-card" data-view="MOBILITY" id="card-mobility">
+          <div class="health-card-header">
+            <span class="health-icon" id="mobility-icon">♿</span>
+            <span class="health-tag" id="mobility-tag">SILLA</span>
+          </div>
+          <div class="health-card-val" id="metric-mobility-val">1,720</div>
+          <div class="health-card-label" id="metric-mobility-sub">3.2 km · 410 kcal</div>
+        </div>
+      </div>
+
+      <!-- Quick One-Tap Question Pills for Hands-Free simulation -->
+      <div class="quick-pills-row">
+        <button class="pill-btn" id="pill-health" data-query="¿Cómo andamos de salud?" data-i18n="pill.health">🏥 ¿Cómo andamos de salud?</button>
+        <button class="pill-btn" id="pill-sleep" data-query="¿Cómo dormí?" data-i18n="pill.sleep">🛌 ¿Cómo dormí?</button>
+        <button class="pill-btn" id="pill-cardio" data-query="¿Cómo está mi corazón?" data-i18n="pill.cardio">❤️ Mi corazón</button>
+        <button class="pill-btn" id="pill-mobility" data-query="¿Cuánta actividad llevo?" data-i18n="pill.mobilityWheelchair">♿ Movilidad en silla</button>
+      </div>
+    </section>
+
+    <!-- Settings & Integrations Drawer (Collapsible) -->
+    <section id="settings-card" class="settings-card section-container" style="display: none;">
+      <div class="settings-header">
+        <span class="section-title" id="settings-title" data-i18n="settings.title">Configuración de Accesibilidad & Dispositivos</span>
+        <button id="btn-close-settings" class="btn-icon-small">✕</button>
+      </div>
+      <div class="settings-body">
+        <!-- Mobility Mode Selector -->
+        <div class="setting-group">
+          <label id="lbl-mobility-mode" data-i18n="settings.mobilityMode">Modo de Movilidad Personal:</label>
+          <div class="radio-group" style="margin-top: 6px;">
+            <label class="radio-label">
+              <input type="radio" name="setting-mobility-mode" value="wheelchair" checked id="radio-wheelchair">
+              <span id="lbl-radio-wheelchair" data-i18n="settings.modeWheelchairLabel">♿ Silla de ruedas (Empujes)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="setting-mobility-mode" value="steps" id="radio-steps">
+              <span id="lbl-radio-steps" data-i18n="settings.modeStepsLabel">🚶‍♂️ Prótesis / Pasos normales</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Hands-free Auto-Rotation Toggle -->
+        <div class="setting-item-row" style="margin-top: 10px;">
+          <div>
+            <div class="setting-label-bold" id="lbl-handsfree" data-i18n="settings.handsFree">♿ Modo Manos Libres en HUD</div>
+            <div class="setting-subtext" id="lbl-handsfree-desc" data-i18n="settings.handsFreeDesc">Rota automáticamente las métricas de salud en las gafas cada 8 seg.</div>
+          </div>
+          <input type="checkbox" id="toggle-auto-cycle" checked class="toggle-checkbox">
+        </div>
+
+        <!-- Source Selector -->
+        <div class="setting-group" style="margin-top: 12px;">
+          <label for="health-source-select" id="lbl-health-source" data-i18n="settings.healthSource">Fuente de Datos Biométricos:</label>
+          <select id="health-source-select" class="provider-select">
+            <option value="smart_offline" id="opt-smart-profile" data-i18n="settings.smartProfile" selected>Perfil Inteligente NICO (Offline / Auto)</option>
+            <option value="oura">Oura Ring API (Cloud Token)</option>
+            <option value="apple_health">Salud de Apple / HealthKit (JSON)</option>
+          </select>
+        </div>
+
+        <!-- Oura Ring Token Group -->
+        <div id="oura-token-group" style="display: none; margin-top: 10px;">
+          <label for="oura-token-input" id="lbl-oura-token" data-i18n="settings.ouraTokenLabel">Personal Access Token de Oura:</label>
+          <input type="password" id="oura-token-input" class="text-input" placeholder="Pega tu token de cloud.ouraring.com">
+          <button id="btn-sync-oura" class="btn-primary" style="margin-top: 6px;" data-i18n="settings.ouraTokenBtn">Sincronizar Oura Ring</button>
+        </div>
+
+        <!-- Apple Health Import Group -->
+        <div id="apple-health-group" style="display: none; margin-top: 10px;">
+          <label id="lbl-apple-import" data-i18n="settings.appleImportLabel">Importar muestra de Salud de Apple (JSON):</label>
+          <button id="btn-import-health" class="btn-secondary" style="width: 100%; margin-top: 4px;" data-i18n="settings.appleImportBtn">📂 Cargar JSON de Salud</button>
+          <input type="file" id="health-file-input" accept=".json" style="display: none;">
+        </div>
+
+        <!-- AI Engine -->
+        <div class="setting-group" style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+          <label for="provider-select" id="lbl-ai-engine" data-i18n="settings.aiEngine">Motor de Asistente IA:</label>
+          <select id="provider-select" class="provider-select">
+            <option value="mock" selected>AYUMI Local (Salud & Accesibilidad)</option>
+            <option value="gemini">Google Gemini 2.0 Flash (Multimodal)</option>
+          </select>
+        </div>
+
+        <div id="gemini-key-group" style="display: none; margin-top: 10px;">
+          <label for="gemini-key-input" id="lbl-gemini-key" data-i18n="settings.geminiKeyLabel">Clave API de Gemini:</label>
+          <input type="password" id="gemini-key-input" class="text-input" placeholder="AIzaSy..." autocomplete="off">
+          <button id="btn-save-key" class="btn-primary" style="margin-top: 6px;" data-i18n="settings.geminiKeyBtn">Guardar Clave</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: ASSISTANT INTERACTION (Cerebro y Entrada) -->
+    <section class="section-container status-card">
+      <div class="section-title-bar" style="width: 100%;">
+        <span class="section-title" id="assistant-section-title" data-i18n="assistant.title">🎙️ ASISTENTE AYUMI (CONTROL Y PREGUNTAS)</span>
+        <div id="state-badge" class="status-badge" data-i18n="state.idle">EN ESPERA</div>
+      </div>
+
+      <h1 id="state-title" class="status-title">Listo para escuchar</h1>
+      <p id="state-desc" class="status-desc" data-i18n="state.idleDesc">Pulsa el botón de las gafas o habla aquí para consultar salud, movilidad o recordatorios.</p>
+
+      <!-- Live Transcription Indicator -->
+      <div id="live-transcript-box" class="live-transcript" style="display: none;">
+        <span class="transcript-prefix" data-i18n="state.listeningLive">Escuchando:</span>
+        <span id="live-transcript-text" class="transcript-text" data-i18n="state.waitingVoice">...</span>
+      </div>
+
+      <!-- Big Push-to-Talk Button -->
+      <div class="talk-button-wrapper">
+        <button id="talk-btn" class="talk-button" aria-label="Presiona para hablar">
+          <span id="talk-icon" class="talk-icon">🎙️</span>
+          <span id="talk-label" class="talk-label" data-i18n="state.talkButton">MANTÉN PARA HABLAR</span>
+        </button>
+      </div>
+
+      <!-- Direct Text Input Option -->
+      <div class="quick-input-row">
+        <input type="text" id="manual-query-input" class="text-input" placeholder="Escribe una pregunta sobre tu salud o el día..." />
+        <button id="btn-send-manual" class="btn-primary" data-i18n="state.askBtn">Preguntar</button>
+      </div>
+    </section>
+
+    <!-- SECTION 3: HUD MIRROR (Visual glasses projection) -->
+    <section class="section-container hud-preview-card">
+      <div class="section-header">
+        <span class="section-title" id="hud-section-title" data-i18n="hud.mirrorTitle">👓 VISTA EN VIVO HUD (GAFAS 600×350)</span>
+        <div class="hud-controls">
+          <button id="btn-cycle-hud" class="btn-secondary" title="Cambiar métrica" data-i18n="hud.cycleBtn">Cambiar Vista</button>
+          <button id="sync-hud-btn" class="btn-secondary" data-i18n="hud.syncBtn">Forzar Sync</button>
+        </div>
+      </div>
+      <div id="hud-container" class="hud-canvas-container">
+        <!-- Canvas dynamically injected here -->
+      </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTION HISTORY -->
+    <section class="section-container history-card">
+      <div class="section-header">
+        <span class="section-title" id="history-section-title" data-i18n="history.title">📝 HISTORIAL DE CONSULTAS</span>
+        <button id="clear-history-btn" class="btn-secondary" data-i18n="history.clearBtn">Limpiar</button>
+      </div>
+      <div id="history-list" class="history-list">
+        <div class="empty-history" data-i18n="history.empty">No hay consultas registradas aún.</div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: CREATOR & ACCESSIBILITY COMMUNITY -->
+    <footer class="section-container creator-card">
+      <div class="creator-header">
+        <span class="creator-badge" id="creator-badge" data-i18n="creator.badge">CREADO POR</span>
+        <span class="creator-icon">🦾</span>
+      </div>
+      <h2 class="creator-name" data-i18n="creator.name">Nicolás Carvajal</h2>
+      <div class="creator-tagline" id="creator-tagline" data-i18n="creator.tagline">Atleta Biónico · Tecnología de Accesibilidad & Autonomía</div>
+      <p class="creator-bio" id="creator-bio" data-i18n="creator.bio">
+        Diseñado para personas amputadas, usuarias de silla de ruedas o prótesis, facilitando el acceso a salud y asistencia con las manos completamente libres.
+      </p>
+
+      <div class="creator-socials">
+        <a href="https://www.instagram.com/El.Bioniico" target="_blank" rel="noopener noreferrer" class="social-pill">
+          <span class="social-icon">📸</span>
+          <span class="social-text">Instagram <strong>@El.Bioniico</strong></span>
+        </a>
+        <a href="https://www.facebook.com/El.Bioniico" target="_blank" rel="noopener noreferrer" class="social-pill">
+          <span class="social-icon">📘</span>
+          <span class="social-text">Facebook <strong>@El.Bioniico</strong></span>
+        </a>
+        <a href="https://www.tiktok.com/@nosoynico" target="_blank" rel="noopener noreferrer" class="social-pill">
+          <span class="social-icon">🎵</span>
+          <span class="social-text">TikTok <strong>@nosoynico</strong></span>
+        </a>
+      </div>
+
+      <div class="creator-feedback" id="creator-feedback" data-i18n="creator.feedback">
+        💡 ¿Tienes sugerencias, ideas o usas otra prótesis/sensor? ¡Escríbeme en redes para integrarlo a AYUMI!
+      </div>
+    </footer>
+  </div>
+
+  <audio id="audio-playback" style="display: none;"></audio>
+  <script type="module" src="plugin.js"></script>
+</body>
+</html>

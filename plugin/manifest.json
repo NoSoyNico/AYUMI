@@ -1,0 +1,64 @@
+{
+  "id": "com.ayumi.app",
+  "name": "AYUMI",
+  "version": "1.0.0",
+  "entry": "index.html",
+  "bridgeVersion": "2.0",
+  "schemaVersion": 2,
+  "permissionPolicyVersion": 1,
+  "description": "Asistente de salud y movilidad manos libres para MemoMind One. Creado por Nicolás Carvajal (@El.Bioniico / @nosoynico).",
+  "permissions": [
+    {
+      "name": "display",
+      "required": true
+    },
+    {
+      "name": "device.events",
+      "required": true,
+      "scope": {
+        "types": [
+          "button",
+          "connection"
+        ]
+      }
+    },
+    {
+      "name": "audio.capture",
+      "required": true
+    },
+    {
+      "name": "storage",
+      "required": true
+    },
+    {
+      "name": "network",
+      "required": true,
+      "reason": "Sincronización de salud con Oura y Apple Health"
+    },
+    {
+      "name": "device.info",
+      "required": false
+    }
+  ],
+  "deviceRequirements": {
+    "preferredPluginId": "com.gm.example.web-bridge",
+    "protocols": [
+      {
+        "id": "gm.scene",
+        "minVersion": "1.0"
+      },
+      {
+        "id": "gm.scene-lz4",
+        "minVersion": "1.0"
+      },
+      {
+        "id": "gm.device",
+        "minVersion": "1.0"
+      },
+      {
+        "id": "gm.audio",
+        "minVersion": "1.0"
+      }
+    ]
+  }
+}
