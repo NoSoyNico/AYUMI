@@ -28,6 +28,7 @@ export class MemoryService {
   async init() {
     await this.loadSettings();
     await this.loadHistory();
+    return this.settings;
   }
 
   async loadSettings() {

@@ -420,7 +420,7 @@ export class HUDRenderer {
     const baseY = 175;
 
     for (let i = 0; i < bars; i++) {
-      const height = 10 + Math.sin((i + this.animationFrame) * 0.8) * 20 + Math.random() * 8;
+      const height = Math.max(4, 12 + Math.sin((i + this.animationFrame) * 0.8) * 16 + Math.random() * 8);
       ctx.fillStyle = i % 2 === 0 ? '#FFFFFF' : '#AAAAAA';
       this.roundedRect(ctx, startX + i * (barWidth + gap), baseY - height, barWidth, height, 3);
       ctx.fill();
@@ -520,12 +520,19 @@ export class HUDRenderer {
   }
 
   roundedRect(ctx, x, y, width, height, radius) {
+    if (width <= 0 || height <= 0) return;
+    const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+    if (typeof ctx.roundRect === 'function') {
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, r);
+      return;
+    }
     ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.arcTo(x + width, y, x + width, y + height, radius);
-    ctx.arcTo(x + width, y + height, x, y + height, radius);
-    ctx.arcTo(x, y + height, x, y, radius);
-    ctx.arcTo(x, y + width, y, radius);
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + r, y, r);
     ctx.closePath();
   }
 

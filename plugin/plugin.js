@@ -115,13 +115,17 @@ async function transitionTo(newState, data = {}) {
   updatePhoneUI(newState, data);
 
   // Render on HUD with health data context & mobility mode
-  await hudRenderer.renderState(newState, {
-    ...data,
-    healthData: healthService.data,
-    healthView: healthService.currentHudView,
-    mobilityMode: healthService.mobilityMode,
-    lastQuery: lastInteraction?.query || '',
-  });
+  try {
+    await hudRenderer.renderState(newState, {
+      ...data,
+      healthData: healthService.data,
+      healthView: healthService.currentHudView,
+      mobilityMode: healthService.mobilityMode,
+      lastQuery: lastInteraction?.query || '',
+    });
+  } catch (hudErr) {
+    console.error('[AYUMI HUD Render Error]', hudErr);
+  }
 
   if (newState === 'RESPONSE') {
     responseDismissTimer = setTimeout(() => {
@@ -367,29 +371,32 @@ async function startVoiceCapture() {
 /**
  * Stop Voice Recording and Process
  */
-function stopVoiceCapture() {
+async function stopVoiceCapture() {
   if (!isButtonInputActive && currentState !== 'LISTENING') return;
   isButtonInputActive = false;
   pressGeneration++;
 
   // Stop recognizer and collect transcript
-  aiManager.nativeSTT.stop().then((recognizedText) => {
+  try {
+    const recognizedText = await aiManager.nativeSTT.stop();
     if (recognizedText && recognizedText.trim()) {
       detectedSpanishTranscript = recognizedText.trim();
     }
-  });
+  } catch (e) {
+    console.warn('[AYUMI STT] Error stopping STT:', e);
+  }
 
   const capture = currentRecordingCapture;
   if (!capture) {
     if (currentState === 'LISTENING') {
-      finishProcessing(null, detectedSpanishTranscript);
+      await finishProcessing(null, detectedSpanishTranscript);
     }
     return;
   }
 
   if (recordingStopPromise) return;
 
-  transitionTo('THINKING');
+  await transitionTo('THINKING');
   recordingAudioState = 'stopping';
 
   recordingStopPromise = capture
@@ -399,11 +406,11 @@ function stopVoiceCapture() {
       recordingAudioState = 'stopped';
       await finishProcessing(recording, detectedSpanishTranscript);
     })
-    .catch((error) => {
+    .catch(async (error) => {
       recordingAudioState = 'error';
       currentRecordingCapture = null;
       console.warn('[AYUMI Audio] Error al detener captura:', error);
-      finishProcessing(null, detectedSpanishTranscript);
+      await finishProcessing(null, detectedSpanishTranscript);
     })
     .finally(() => {
       recordingStopPromise = null;
@@ -804,7 +811,7 @@ async function initializePlugin() {
     await gm.ready();
     console.log('[AYUMI] gm.ready() completado');
 
-    const settings = await memoryService.init();
+    const settings = (await memoryService.init()) || memoryService.settings || {};
     await healthService.init();
 
     // Set saved language

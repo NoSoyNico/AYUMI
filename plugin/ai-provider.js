@@ -73,19 +73,26 @@ export class NativeSpanishSTT {
   }
 
   stop() {
-    if (!this.isSupported || !this.isListening) return Promise.resolve(this.transcript);
+    if (!this.isSupported || !this.isListening) return Promise.resolve(this.transcript.trim());
     return new Promise((resolve) => {
+      let resolved = false;
       const finish = () => {
+        if (resolved) return;
+        resolved = true;
         this.isListening = false;
         resolve(this.transcript.trim());
       };
-      this.recognition.onend = finish;
-      try {
-        this.recognition.stop();
-      } catch (e) {
+      if (this.recognition) {
+        this.recognition.onend = finish;
+        try {
+          this.recognition.stop();
+        } catch (e) {
+          finish();
+        }
+      } else {
         finish();
       }
-      setTimeout(finish, 1200);
+      setTimeout(finish, 600);
     });
   }
 }
@@ -109,9 +116,9 @@ export class BaseAIProvider {
  * Intelligent Multi-language Offline Assistant (es, en, zh, fr, ru)
  */
 export class SmartSpanishAssistant extends BaseAIProvider {
-  constructor(healthService = null) {
+  constructor(healthService = null, sttInstance = null) {
     super('mock', 'AYUMI Local (Salud & Accesibilidad)');
-    this.stt = new NativeSpanishSTT('es-MX');
+    this.stt = sttInstance || new NativeSpanishSTT('es-MX');
     this.healthService = healthService;
   }
 
@@ -323,7 +330,7 @@ export class AIProviderManager {
     this.activeProviderId = 'mock';
     this.nativeSTT = new NativeSpanishSTT('es-MX');
 
-    const offlineAssistant = new SmartSpanishAssistant(healthService);
+    const offlineAssistant = new SmartSpanishAssistant(healthService, this.nativeSTT);
     this.registerProvider(offlineAssistant);
     this.registerProvider(new GeminiAIProvider());
   }
