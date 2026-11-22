@@ -5,6 +5,9 @@
 > 📸 Instagram / Facebook: **@El.Bioniico** · 🎵 TikTok: **@nosoynico**  
 > 👓 Diseñado para gafas inteligentes **MemoMind One** (HUD 600×350)
 
+[![Apoya a Nico en Ko-fi](https://img.shields.io/badge/Ko--fi-Apoyar%20el%20proyecto-ff5e5b?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/bioniico)
+[![Licencia MIT](https://img.shields.io/badge/Licencia-MIT-00e676?style=for-the-badge)](LICENSE)
+
 ![AYUMI en MemoMind Studio](docs/screenshots/ayumi_studio_overview.png)
 
 ---
@@ -163,6 +166,7 @@ Genera el paquete `dist/com.ayumi.app-1.0.0.mmpkg` listo para cargar en **MemoMi
 
 Si eres una persona amputada, usuaria de prótesis o silla de ruedas, profesional de la salud o desarrollador que quiera colaborar con sugerencias e integraciones:
 
+* ☕ **Ko-fi (Apoya el proyecto):** [ko-fi.com/bioniico](https://ko-fi.com/bioniico)
 * 📸 **Instagram:** [@El.Bioniico](https://www.instagram.com/El.Bioniico)
 * 📘 **Facebook:** [@El.Bioniico](https://www.facebook.com/El.Bioniico)
 * 🎵 **TikTok:** [@nosoynico](https://www.tiktok.com/@nosoynico)
