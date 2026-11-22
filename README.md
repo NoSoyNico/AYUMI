@@ -5,7 +5,7 @@
 > 📸 Instagram / Facebook: **@El.Bioniico** · 🎵 TikTok: **@nosoynico**  
 > 👓 Diseñado para gafas inteligentes **MemoMind One** (HUD 600×350)
 
-![MemoMind Studio](docs/screenshots/ayumi_memomind_studio.png)
+![AYUMI en MemoMind Studio](docs/screenshots/ayumi_studio_overview.png)
 
 ---
 
@@ -59,6 +59,24 @@ AYUMI no es solo una aplicación; es una declaración de autonomía y tecnologí
 | **Signos Cardíacos & HRV** | Frecuencia cardíaca en reposo, variabilidad HRV (recuperación nerviosa) y SpO2. | Detección de estrés fisiológico o sobreentrenamiento. |
 | **Asistente por Voz** | Responde preguntas naturales (*"¿Cómo dormí?"*, *"¿Cómo andamos de salud?"*). | Respuestas concisas en 2 líneas optimizadas para el prisma óptico. |
 | **Modo Manos Libres** | Rotación automática en HUD o avance con toque único en la patilla. | Cero dependencia de tocar la pantalla del smartphone. |
+
+---
+
+## 📸 Galería Visual: HUD y Aplicación Móvil
+
+### 👓 Pantallas en el HUD de las Gafas (600×350 Monocromo)
+
+| Salud & Recuperación Diaria | Movilidad en Silla de Ruedas |
+| :---: | :---: |
+| ![Salud y Recuperación](docs/screenshots/hud_health_overview.png) | ![Movilidad en Silla](docs/screenshots/hud_wheelchair_mobility.png) |
+| **Signos Vitales & Cardio** | **Desglose de Fases de Sueño** |
+| ![Signos Vitales](docs/screenshots/hud_vital_signs.png) | ![Fases de Sueño](docs/screenshots/hud_sleep_breakdown.png) |
+
+### 📱 Interfaz Companion en el Teléfono
+
+| Panel de Telemetría y Selector de Modo | Asistente de Voz Manos Libres |
+| :---: | :---: |
+| ![Panel de Salud](docs/screenshots/phone_health_dashboard.jpg) | ![Asistente de Voz](docs/screenshots/phone_voice_assistant.jpg) |
 
 ---
 
@@ -148,3 +166,12 @@ Si eres una persona amputada, usuaria de prótesis o silla de ruedas, profesiona
 * 📸 **Instagram:** [@El.Bioniico](https://www.instagram.com/El.Bioniico)
 * 📘 **Facebook:** [@El.Bioniico](https://www.facebook.com/El.Bioniico)
 * 🎵 **TikTok:** [@nosoynico](https://www.tiktok.com/@nosoynico)
+
+---
+
+## ⚖️ Aviso Legal, Marcas y Salud (Disclaimer)
+
+* **Proyecto Independiente:** AYUMI es un proyecto de código abierto desarrollado de forma independiente por Nicolás Carvajal (@El.Bioniico / @nosoynico) para fines de accesibilidad y autonomía personal.
+* **Propiedad de Marcas:** *MemoMind*, *MemoMind One*, *XGIMI*, *Oura*, *RingConn*, *Apple*, *Apple Health*, *HealthKit*, *Google*, *Gemini* y *Strava* son marcas comerciales de sus respectivos propietarios. Su mención en este proyecto responde exclusivamente a fines descriptivos de interoperabilidad y compatibilidad técnica (*nominative fair use*).
+* **Aviso Médico:** AYUMI es una herramienta de accesibilidad y consulta informativa. No es un dispositivo médico ni debe emplearse para el diagnóstico o tratamiento de condiciones de salud.
+* **Licencia:** Distribuido bajo licencia abierta [MIT](LICENSE) para uso y estudio libre por parte de la comunidad.
